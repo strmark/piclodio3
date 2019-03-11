@@ -1,7 +1,7 @@
 import inspect
 import os
 
-from webapi.Utils.CrontabManager import CrontabManager
+from webapi.utils.CrontabManager import CrontabManager
 
 
 def add_job_in_crontab(alarm):
@@ -16,7 +16,7 @@ def add_job_in_crontab(alarm):
     run_script_path = get_root_path(current_script_path) + os.sep + "run_web_radio.py"
 
     # new_job: <minute> <hour> * * <day_of_week> <run_script_path> <webradio_id>
-    new_job = "%s %s * * %s python %s %s " % (alarm.minute,
+    new_job = "%s %s * * %s python3 %s %s " % (alarm.minute,
                                               alarm.hour,
                                               day_of_week,
                                               run_script_path,
@@ -32,7 +32,7 @@ def add_job_in_crontab(alarm):
         line = "# "
         new_job = line + new_job
 
-    print "Crontab job line: %s" % new_job
+    print("Crontab job line: %s" % new_job)
     CrontabManager.add_job(new_job)
 
 

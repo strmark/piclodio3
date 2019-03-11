@@ -1,23 +1,29 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" (click)="isCollapsed = !isCollapsed" >
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-
-      <a class="navbar-brand" routerLink="/homepage">Piclodio</a>
-    </div>
-    <div class="collapse navbar-collapse" [collapse]="isCollapsed" id="navbar-collapse-main">
-      <ul class="nav navbar-nav">
-        <li (click)="isCollapsed = !isCollapsed" class="nav-item" [routerLinkActive]="['active']"><a routerLink="/homepage">Homepage</a></li>
-        <li (click)="isCollapsed = !isCollapsed" class="nav-item" [routerLinkActive]="['active']"><a routerLink="/webradios">Web radios</a></li>
-        <li (click)="isCollapsed = !isCollapsed" class="nav-item" [routerLinkActive]="['active']"><a routerLink="/alarms">Alarms</a></li>
-        <li (click)="isCollapsed = !isCollapsed" class="nav-item" [routerLinkActive]="['active']"><a routerLink="/option">Options</a></li>
-      </ul>
-    </div>
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+<nav class="navbar navbar-expand-md navbar-light">
+  <a class="navbar-brand" routerLink="homepage">Piclodio</a>
+  <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed = !isNavbarCollapsed" >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div [ngbCollapse]="!isNavbarCollapsed" class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link fa fa-home" routerLink="/homepage" routerLinkActive="active">Homepage</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link fa fa-music" routerLink="/webradio" routerLinkActive="active">Internet Radio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link fa fa-bell" routerLink="/alarm" routerLinkActive="active">Alarm</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link fa fa-cog" routerLink="/option" routerLinkActive="active">Option</a>
+      </li>
+    </ul>
   </div>
 </nav>
 

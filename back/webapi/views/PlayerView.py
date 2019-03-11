@@ -1,17 +1,18 @@
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import permissions
 
-from webapi.Utils.PlayerManager import PlayerManager
+from webapi.utils.PlayerManager import PlayerManager
 from webapi.models import WebRadio
 from webapi.serializers.PlayerSerializer import PlayerManagerSerializer
 
+@api_view(['GET', 'POST'])
+@permission_classes((permissions.AllowAny,))
+def PlayerStatus(request):
 
-class PlayerStatus(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request):
+    if request.method == 'GET':
         """
         Get the Mplayer status
         """
@@ -25,7 +26,7 @@ class PlayerStatus(APIView):
         }
         return Response(answer)
 
-    def post(self, request):
+    elif request.method == 'POST':
         serializer = PlayerManagerSerializer(data=request.data)
 
         if serializer.is_valid():

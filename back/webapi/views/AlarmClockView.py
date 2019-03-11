@@ -1,25 +1,25 @@
 from django.http import Http404
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import permissions
 
-from webapi.Utils.CrontabManager import CrontabManager
+from webapi.utils.CrontabManager import CrontabManager
 from webapi.models import AlarmClock
 from webapi.serializers.AlarmClockSerializer import AlarmClockSerializer
 from webapi.views import Utils
 
+@api_view(['GET','POST'])
+@permission_classes((permissions.AllowAny,))
+def AlarmClockList(request):
 
-class AlarmClockList(APIView):
-    permission_classes = (AllowAny,)
-    serializer_class = AlarmClockSerializer
-
-    def get(self, request, format=None):
+    if request.method == 'GET':
         alarmclocks = AlarmClock.objects.all()
         serializer = AlarmClockSerializer(alarmclocks, many=True)
         return Response(serializer.data)
 
-    def post(self, request, format=None):
+    elif request.method == 'POST':
         serializer = AlarmClockSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -29,27 +29,21 @@ class AlarmClockList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class AlarmClockDetail(APIView):
+@api_view(['GET', 'PUT', 'DELETE'])
+def AlarmClockDetail(request, pk):
     """
     Retrieve, update or delete a WebRadio instance.
     """
-    permission_classes = (AllowAny,)
-    serializer_class = AlarmClockSerializer
+    try:
+        alarmclock = AlarmClock.objects.get(pk=pk)
+    except AlarmClock.DoesNotExist:
+        raise Http404
 
-    def get_object(self, pk):
-        try:
-            return AlarmClock.objects.get(pk=pk)
-        except AlarmClock.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        alarmclock = self.get_object(pk)
+    if request.method == 'GET':
         serializer = AlarmClockSerializer(alarmclock)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        alarmclock = self.get_object(pk)
+    elif request.method == 'PUT':
         serializer = AlarmClockSerializer(alarmclock, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -62,8 +56,7 @@ class AlarmClockDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        alarmclock = self.get_object(pk)
+    elif request.method == 'DELETE':
         # remove the line from the crontab
         job_comment = "piclodio%s" % alarmclock.id
         CrontabManager.remove_job(job_comment)

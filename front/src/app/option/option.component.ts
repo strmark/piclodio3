@@ -1,50 +1,65 @@
-import { PopupComponent } from './../popup/popup.component';
-import { Backup } from './backup';
+import { Component, OnInit } from '@angular/core';
 import { GlobalVariable } from './../globals';
-import { Volume } from './volume';
 import { OptionService } from './option.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Volume } from './volume';
+import { Backup } from './backup';
 import { FileUploader } from 'ng2-file-upload';
+
+interface Alert {
+  type: string;
+  message: string;
+}
 
 @Component({
   selector: 'app-option',
   templateUrl: './option.component.html',
   styleUrls: ['./option.component.css']
 })
+
 export class OptionComponent implements OnInit {
+  alerts: Alert[];
   baseUrl: string = GlobalVariable.BASE_API_URL;
-  currentVolume: Volume;
+  currentVolume: Volume = new Volume(70);
   currentBackup: Backup;
   volumeLoaded: boolean = false;
+  uploadedFiles: any[] = [];
+
   public uploader: FileUploader = new FileUploader({
-    url: this.baseUrl + "/backup",
+    url: this.baseUrl + "/backup/",
     method: 'POST',
     itemAlias: 'backup_file',
     queueLimit: 1,
     removeAfterUpload: true
   });
-  @ViewChild(PopupComponent) popupComponent: PopupComponent;
 
   constructor(private optionService: OptionService) {
-
     // action when we successfully upload a file
     this.uploader.onSuccessItem = () => {
       console.log('upload complete');
       // refresh the view
       this.refreshBackup();
       // show a popup message
-      this.popupComponent.add('success', 'File uploaded');
+      this.alerts = [{ 
+        type: 'success', 
+        message: 'File uploaded', 
+      }];
     };
 
     // action when we failled to upload a file
     this.uploader.onErrorItem = () => {
       console.log('upload failled');
       // show a popup message
-      this.popupComponent.add('danger', 'Fail to upload');
+      this.alerts = [{ 
+        type: 'danger', 
+        message: 'Fail to upload', 
+      }];
     };
-
   }
 
+  close(alert: Alert) {
+    this.alerts.splice(this.alerts.indexOf(alert), 1);
+  }
+ 
   ngOnInit() {
     // get the current volume
     this.refreshVolume();
@@ -54,7 +69,6 @@ export class OptionComponent implements OnInit {
     this.uploader.onBeforeUploadItem = (item) => {
       item.withCredentials = false;
     }
-
   }
 
   /**
@@ -95,7 +109,6 @@ export class OptionComponent implements OnInit {
       tmpBackup.backup_file = onlyFileName;
       this.currentBackup = tmpBackup;
     }
-
   }
 
   /**
@@ -103,7 +116,7 @@ export class OptionComponent implements OnInit {
    */
   reduceVolume() {
     let newVolumeLevel = this.currentVolume.volume;
-    newVolumeLevel = newVolumeLevel - 10;
+    newVolumeLevel = newVolumeLevel - 2;
     if (newVolumeLevel < 0) {
       newVolumeLevel = 0;
     }
@@ -121,7 +134,7 @@ export class OptionComponent implements OnInit {
    */
   increaseVolume() {
     let newVolumeLevel = this.currentVolume.volume;
-    newVolumeLevel = newVolumeLevel + 10;
+    newVolumeLevel = newVolumeLevel + 2;
     if (newVolumeLevel > 100) {
       newVolumeLevel = 100;
     }
@@ -133,5 +146,5 @@ export class OptionComponent implements OnInit {
       error => console.log("Error " + error)
     );
   }
-
 }
+

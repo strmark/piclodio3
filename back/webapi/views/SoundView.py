@@ -1,23 +1,24 @@
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import permissions
 
-from webapi.Utils.SoundManager import SoundManager
+from webapi.utils.SoundManager import SoundManager
 from webapi.serializers.SoundManagerSerializer import SoundManagerSerializer
 
+@api_view(['GET', 'POST'])
+@permission_classes((permissions.AllowAny,))
+def VolumeManagement(request):
 
-class VolumeManagement(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request):
+    if request.method == 'GET':
         """
         Get the volume status
         """
         content = {'volume': SoundManager.get_volume()}
         return Response(content)
 
-    def post(self, request):
+    elif request.method == 'POST':
         serializer = SoundManagerSerializer(data=request.data)
 
         if serializer.is_valid():

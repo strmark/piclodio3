@@ -23,11 +23,11 @@ sudo python get-pip.py
 
 Install python lib via pip
 ```bash
-sudo pip install django==1.10.4
-sudo pip install djangorestframework==3.5.3
-sudo pip install django-cors-headers==1.3.1
-sudo pip install gunicorn==19.6.0
-sudo pip install pyalsaaudio==0.8.2
+sudo pip3 install django==2.1.7
+sudo pip3 install djangorestframework==3.9.1
+sudo pip3 install django-cors-headers==2.4.0
+sudo pip3 install gunicorn==19.9.0
+sudo pip3 install pyalsaaudio==0.8.4
 ```
 
 Clone the project
@@ -40,18 +40,18 @@ git clone https://github.com/Sispheor/piclodio3.git
 ### manually with the integrated web server
 ```bash
 cd back
-python manage.py runserver 0.0.0.0:8000
+python3 manage.py runserver 0.0.0.0:8000
 ```
 
 ### Manually with Gunicorn
 ```bash
 cd back
-gunicorn --bind 0.0.0.0:8000 piclodio3.wsgi:application
+gunicorn --bind 0.0.0.0:8000 piclodio.wsgi:application
 ```
 
 ### Automatically at each startup with systemd (Prod)
 
-Switch the server to prod mode by editing the file `back/piclodio3/settings.py` and update the line that correspond to the debug
+Switch the server to prod mode by editing the file `back/piclodio/settings.py` and update the line that correspond to the debug
 ```python
 DEBUG = False
 ```
@@ -71,7 +71,7 @@ After=network.target
 User=pi
 Group=pi
 WorkingDirectory=/home/pi/piclodio3/back
-ExecStart=gunicorn --bind 0.0.0.0:8000 piclodio3.wsgi:application
+ExecStart=/usr/local/bin/gunicorn --bind 0.0.0.0:8000 piclodio.wsgi:application
 
 [Install]
 WantedBy=multi-user.target

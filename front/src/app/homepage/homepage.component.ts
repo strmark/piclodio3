@@ -1,15 +1,15 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlarmClock } from '../alarm-clock/alarm-clock';
 import { AlarmClockService } from './../alarm-clock/alarm-clock.service';
-import { DateFormatter } from '@angular/common/src/pipes/intl';
+import { DatePipe } from '@angular/common';
 import { Player } from './../player/player';
 import { PlayerService } from '../player/player.service';
-import { WebRadio } from './../web-radios/web-radio';
+import { WebRadio } from './../web-radio/web-radio';
 import { SystemDateService } from './systemdate.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {SystemDate} from '../system-date';
-import { WebRadioService } from '../web-radios/web-radio.service';
-import { Observable, Subscription } from 'rxjs/Rx';
-
+import { SystemDate } from './system-date';
+import { WebRadioService } from '../web-radio/web-radio.service';
+import { Observable, Subscription } from 'rxjs';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-homepage',
@@ -17,8 +17,9 @@ import { Observable, Subscription } from 'rxjs/Rx';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit, OnDestroy {
+
   clock: Date;
-  clockString: string;
+  clockDate: Date;
   active_webradios: any[];
   active_alarms: AlarmClock[];
   all_webradios: any[];
@@ -27,12 +28,12 @@ export class HomepageComponent implements OnInit, OnDestroy {
   player: Player;
   playerLoaded: boolean = false;
 
+  datePipe: DatePipe;
+
   constructor(private webRadioService: WebRadioService,
     private systemDateService: SystemDateService,
     private playerService: PlayerService,
     private alarmClockService: AlarmClockService) {
-
-
   }
 
   ngOnInit() {
@@ -45,29 +46,28 @@ export class HomepageComponent implements OnInit, OnDestroy {
     this.playerService.getPlayerStatus().subscribe(this.setPlayerStatus.bind(this));
     // get the list of activated Alarm
     this.alarmClockService.getAllAlarmClocks().subscribe(this.setActiveAlarmClocks.bind(this));
-
   }
+
   // subcribe return the target object
   setClockCallback(date: Date) {
     this.clock = date;
-    this.clockIncrementSubscription = Observable
-      .interval(1000)
+    this.clockIncrementSubscription =
+      interval(1000)
       .subscribe(this.incrementDate.bind(this));
-
   }
 
   incrementDate() {
-    this.clock.setSeconds(this.clock.getSeconds() + 1)
-    this.clockString = DateFormatter.format(this.clock, 'en', 'EEEE, MMMM d, y H:mm:ss');
-  }
+    this.clock.setSeconds(this.clock.getSeconds() + 1);
+    this.clockDate = this.clock;
+    }
 
   ngOnDestroy() {
     this.systemDateSubscribption.unsubscribe();
     if (this.clockIncrementSubscription) {
       this.clockIncrementSubscription.unsubscribe();
     }
-
   }
+
 
   /**
    * Filter the received list of webradios to keep only the active one (is_default)
@@ -86,12 +86,8 @@ export class HomepageComponent implements OnInit, OnDestroy {
     this.playerLoaded = true;
   }
 
-  switchPlayerStatus(){
-    if (this.player.status == "on"){
-        this.player.status = "off";
-    }else{
-      this.player.status = "on";
-    }
+  switchPlayerStatus(status: string){
+    this.player.status = status;
     this.playerService.updatePlayer(this.player).subscribe(this.setPlayerStatus.bind(this));
   }
 
@@ -99,7 +95,6 @@ export class HomepageComponent implements OnInit, OnDestroy {
     this.active_alarms = alarmclocks.filter(
       alarms => alarms.is_active === true
     )
-
   }
-
 }
+

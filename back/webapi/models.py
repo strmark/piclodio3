@@ -1,8 +1,6 @@
-from __future__ import unicode_literals
-
 from django.db import models
 
-
+# Create your models here.
 class WebRadio(models.Model):
     name = models.CharField(max_length=250)
     url = models.CharField(max_length=250)
@@ -12,7 +10,6 @@ class WebRadio(models.Model):
 
     def __str__(self):
         return "[WebRadio] name: %s, url: %s, is_default: %s" % (self.name, self.url, self.is_default)
-
 
 class AlarmClock(models.Model):
     name = models.CharField(max_length=250)
@@ -27,8 +24,10 @@ class AlarmClock(models.Model):
     minute = models.IntegerField()
     is_active = models.BooleanField(default=False)
     auto_stop_minutes = models.IntegerField(default=0)
-    webradio = models.ForeignKey(WebRadio)
-
+    webradio = models.ForeignKey(WebRadio,
+                                 on_delete=models.DO_NOTHING,
+                                )
 
 class BackupMusic(models.Model):
     backup_file = models.FileField(upload_to="backup_mp3")
+

@@ -1,5 +1,4 @@
-import { INT_TYPE } from '@angular/compiler/src/output/output_ast';
-import { WebRadio } from '../web-radios/web-radio';
+import { WebRadio } from '../web-radio/web-radio';
 
 export class AlarmClock {
     id: number;

@@ -1,14 +1,14 @@
 # Piclodio frontend
 
-This part of the project is written with Angular JS 2 and  was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.30.
+This part of the project is written with Angular 7 and  was generated with [angular-cli](https://github.com/angular/angular-cli) version 7.3.5.
 
 ## Installation
 
 ### Pre requisite
 
-Install nodejs 6.x
+Install nodejs 10x 
 ```bash
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 node --version
 ```
@@ -39,50 +39,29 @@ Navigate to `http://serer_ip:4200/`. The app will automatically reload if you ch
 
 ### Run a prod server
 
-Install apache web server
+Install nginx web server
 ```bash
-sudo apt-get install apache2
+sudo apt-get install nginx
 ```
 
 Build the project to genertate static files
 ```bash
-cd piclodio3/front/
+cd piclodio/front/
 ng build --prod --aot
 ```
 
 The last command wil generate a "dist" folder. Place it in the apache web server and give all right to the Apache user
 ```bash
-sudo cp -R dist/ /var/www/piclodio3
-sudo chown -R www-data: /var/www/piclodio3
+sudo cp -R dist/piclodio /var/www/piclodio
+sudo chown -R www-data: /var/www/piclodio
 ```
 
-Disable the default vHost files
 ```bash
-sudo a2dissite 000-default
 ```
+Edit the file default.conf `sudo nano /etc/nginx/sites-available/default.conf` and change the line
+        root /var/www/html;
+with the following content
+        root /var/www/piclodio;
 
-Create a vHost for piclodio, create a file `/etc/apache2/sites-available/piclodio.conf` with the following content
-```bash
-<VirtualHost *:80>
-
-        DocumentRoot /var/www/piclodio3
-
-        <Directory /var/www/piclodio3>
-                Order allow,deny
-                Allow from all
-                AllowOverride All
-        </Directory>
-
-        ErrorLog ${APACHE_LOG_DIR}/piclodio.log
-        CustomLog ${APACHE_LOG_DIR}/access.piclodio.log combined
-
-</VirtualHost>
 ```
-
-Active the vHost and reload the web server
-```bash
-sudo a2ensite piclodio
-sudo service apache2 reload
-```
-
 Piclodio is now available from the address IP of your Raspberry Pi.

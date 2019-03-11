@@ -1,52 +1,37 @@
-import { AlertModule } from 'ng2-bootstrap/alert';
-import { CollapseModule } from 'ng2-bootstrap/collapse';
-import { OptionComponent } from './option/option.component';
-import { OptionService } from './option/option.service';
-import { PlayerService } from './player/player.service';
-import 'rxjs/add/operator/map';
-import { SystemDateService } from './homepage/systemdate.service';
-import {AlarmClockService} from "./alarm-clock/alarm-clock.service";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule,  Routes }   from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule }   from '@angular/router';
-import { ProgressbarModule } from 'ng2-bootstrap/progressbar';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HttpClientModule, HttpClient} from '@angular/common/http';
+import { FileUploadModule } from 'ng2-file-upload';
+
+import { OptionService } from './option/option.service';
+import { PlayerService } from './player/player.service';
+import { SystemDateService } from './homepage/systemdate.service';
+import { AlarmClockService} from "./alarm-clock/alarm-clock.service";
+import { WebRadioService } from './web-radio/web-radio.service';
 
 import { AppComponent } from './app.component';
-import { WebRadiosComponent } from './web-radios/web-radios.component';
 import { HomepageComponent } from './homepage/homepage.component';
-
-import { WebRadioService } from './web-radios/web-radio.service';
+import { WebRadioComponent } from './web-radio/web-radio.component';
+import { OptionComponent } from './option/option.component';
 import { AlarmClockComponent } from './alarm-clock/alarm-clock.component';
-import { WebRadioFormComponent } from './web-radios/web-radio-form/web-radio-form.component';
-import { AlarmClockFormComponent } from './alarm-clock/alarm-clock-form/alarm-clock-form.component';
-import { ConfirmDeleteModalComponent } from './confirm-delete-modal/confirm-delete-modal.component';
-import { PopupComponent } from './popup/popup.component';
-import { TimepickerModule } from 'ng2-bootstrap/timepicker';
-import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WebRadiosComponent,
     HomepageComponent,
-    AlarmClockComponent,
-    WebRadioFormComponent,
-    AlarmClockFormComponent,
-    ConfirmDeleteModalComponent,
+    WebRadioComponent,
     OptionComponent,
-    PopupComponent,
+    AlarmClockComponent,
   ],
   imports: [
-    CollapseModule.forRoot(),
-    ProgressbarModule.forRoot(),
-    AlertModule.forRoot(),
-    TimepickerModule.forRoot(),
+    NgbModule,
+    NgbModalModule,
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     FileUploadModule,
     RouterModule.forRoot([
       {
@@ -58,35 +43,20 @@ import { FileUploadModule } from 'ng2-file-upload';
         component: HomepageComponent
       },
       {
-        path: 'webradios',
-        component: WebRadiosComponent
+        path: 'webradio',
+        component: WebRadioComponent
       },
       {
-        path: 'webradios/new',
-        component: WebRadioFormComponent
-      },
-      { path: 'webradios/:id',
-       component: WebRadioFormComponent
-      },
-      {
-        path: 'alarms',
+        path: 'alarm',
         component: AlarmClockComponent
-      },
-      {
-        path: 'alarms/new',
-        component: AlarmClockFormComponent
-      },
-      {
-        path: 'alarms/:id',
-        component: AlarmClockFormComponent
       },
       {
         path: 'option',
         component: OptionComponent
       }
-    ])
+   ])
   ],
-  providers: [WebRadioService, AlarmClockService, SystemDateService, PlayerService, OptionService, {provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [WebRadioService, AlarmClockService, SystemDateService, PlayerService, OptionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
