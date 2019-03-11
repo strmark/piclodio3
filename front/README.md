@@ -14,7 +14,7 @@ node --version
 ```
 Clone the project
 ```bash
-git clone https://github.com/Sispheor/piclodio3.git
+git clone https://github.com/strmark/piclodio3.git
 ```
 
 Install Angular cli
@@ -57,7 +57,6 @@ sudo chown -R www-data: /var/www/piclodio
 ```
 
 ```bash
-```
 Edit the file default.conf `sudo nano /etc/nginx/sites-available/default.conf` and change the line
         root /var/www/html;
 with the following content
