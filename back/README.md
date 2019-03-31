@@ -32,7 +32,7 @@ sudo pip3 install pyalsaaudio==0.8.4
 
 Clone the project
 ```bash
-git clone https://github.com/Sispheor/piclodio3.git
+git clone https://github.com/strmark/piclodio3.git
 ```
 
 ## Run the backend
